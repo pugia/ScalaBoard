@@ -1,0 +1,44 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  border-bottom: 1px solid #000;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+}
+
+header form {
+  display: block;
+  height: 50px;
+  background: #f20;
+  text-align: center;
+  line-height: 50px;
+}
+
+#board {
+  z-index: 100;
+  position: relative;
+  background: url("/10.png") top left;
+  margin-top: 50px;
+  width: 4000px;
+  height: 4000px;
+}
+
+#board div.element {
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  box-shadow: 0px 1px 5px rgba(100, 100, 100, 0.5);
+  position: absolute;
+  z-index: 100;
+}
+
+#board div.element.is-dragging, #board div.element.is-pointer-down {
+  cursor: move;
+  z-index: 1000;
+}

@@ -1,0 +1,25 @@
+{
+  "name": "ScalaBoard",
+  "version": "0.0.1",
+  "authors": [
+    "Marco Pugliese <marco.pugliese@pugia.com>"
+  ],
+  "description": "Board for Mockup presentation and flow",
+  "main": "server.js",
+  "keywords": [
+    "board",
+    "presentation",
+    "flow"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "dropzone": "~4.0.1"
+  }
+}

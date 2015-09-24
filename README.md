@@ -1,2 +1,2 @@
 # ScalaBoard
-Board for Mockup presentation and flow
+## Board for Mockup presentation and flow
