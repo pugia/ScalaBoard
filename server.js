@@ -7,7 +7,13 @@ var express = require('express')
 		    cb(null, 'assets/upload')
 		  },
 		  filename: function (req, file, cb) {
-		    cb(null, Date.now() + '_' + file.originalname )
+			  var re = /(?:\.([^.]+))?$/;
+			  var ext = re.exec(file.originalname)[0];
+			  
+				var re = /@(\d)x/;
+			  var ret = re.exec(file.originalname)[0];
+			  
+		    cb(null, Date.now() + ret + ext );
 		  }
 		})
 	,	upload = multer({ storage: storage })

@@ -30,15 +30,70 @@ header form {
 }
 
 #board div.element {
+  position: absolute;
+  z-index: 100;
+  background: none;
+  padding: 10px;
+  font-family: 'Lato', sans-serif;
+}
+
+#board div.element > div.info {
+  height: 20px;
+  color: #000;
+}
+
+#board div.element > div.info label {
+  float: left;
+  height: 20px;
+  line-height: 16px;
+  font-size: 14px;
+}
+
+#board div.element > div.info span.retina {
+  opacity: 0;
+  float: left;
+  font-size: 10px;
+  padding: 2px 4px;
+  color: #333;
+  background: #ddd;
+  border-radius: 2px;
+  line-height: 10px;
+  margin-top: 2px;
+  margin-left: 10px;
+}
+
+#board div.element > div.info span.delete {
+  opacity: 0;
+  float: right;
+  cursor: pointer;
+}
+
+#board div.element > div.image {
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
   box-shadow: 0px 1px 5px rgba(100, 100, 100, 0.5);
-  position: absolute;
-  z-index: 100;
 }
 
-#board div.element.is-dragging, #board div.element.is-pointer-down {
+#board div.element.is-dragging {
   cursor: move;
   z-index: 1000;
+}
+
+#board div.element.active {
+  background: #666;
+  padding: 10px;
+  box-shadow: 0px 1px 5px rgba(100, 100, 100, 0.5);
+}
+
+#board div.element.active > div.info {
+  color: #fff;
+}
+
+#board div.element.active > div.info span {
+  opacity: 1;
+}
+
+#board div.element.active > div.image {
+  box-shadow: none;
 }

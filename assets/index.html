@@ -21,57 +21,174 @@
 		</header>
 		
 		<section id="board">
-						
+<!--
+			<div class="element" style="left: 10px; top: 10px;">
+				<div class="info">
+					
+					<label>Datepicker</label>
+					<span class="retina">@3x</span>
+					
+					<span class="delete">
+						<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16"><g  transform="translate(0, 0)">
+						<polygon points="10.1,4.5 8,6.6 5.9,4.5 4.5,5.9 6.6,8 4.5,10.1 5.9,11.5 8,9.4 10.1,11.5 11.5,10.1 9.4,8 11.5,5.9 
+							" fill="#ffffff"/>
+						</g></svg>
+					</span>
+					
+				</div>
+				<div class="image" style="background-image: url('/upload/1443215106189@3x.png'); width: 320px; height: 568px;"></div>
+			</div>
+-->
 		</section>
-		
-		
+				
 		<script src="//cdnjs.cloudflare.com/ajax/libs/draggabilly/1.2.0/draggabilly.pkgd.min.js"></script>
 		<script src="/bower_components/d3/d3.min.js"></script>
 		<script src="/bower_components/dropzone/dist/min/dropzone.min.js"></script>
+		<script src="/bower_components/underscore/underscore-min.js"></script>
+		
+		<script type="text/html" id="element_template">
+			
+			<div class="info">
+				
+				<label><%= label %></label>
+				<% if (retina) { %>
+				<span class="retina"><%= retina[0] %></span>
+				<% } %>
+				<span class="delete">
+					<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16"><g  transform="translate(0, 0)">
+					<polygon points="10.1,4.5 8,6.6 5.9,4.5 4.5,5.9 6.6,8 4.5,10.1 5.9,11.5 8,9.4 10.1,11.5 11.5,10.1 9.4,8 11.5,5.9" fill="#ffffff"/>
+					</g></svg>
+				</span>
+				
+			</div>
+			<div class="image" style="background-image: url('/upload/<%= filename %>')"></div>
+		
+		</script>
+		
 		<script>
-			Dropzone.autoDiscover = false;
-
-			var draggies = []
-	
-			var board = d3.select('#board');
 			
-			var myDropzone = new Dropzone("#drop", { 
-				url: "/profile",
-				success: function(e, response) {
+		var board = d3.select('#board');
+		var template = _.template(d3.select('#element_template').html());
+		var elements = new Array();
+			
+		elements['55bcfbb0e24a06a958e73ce0'] = {
+			filename: '1443215106189@3x.png',
+			label: 'Datepicker',
+			width: 960,
+			height: 1704,
+			x: 0,
+			y: 0
+		};
+			
+		elements['55bcfbc2e24a06a958e73ce1'] = {
+			filename: '1443215898431@3x.png',
+			label: 'Datepicker v2',
+			width: 960,
+			height: 1704,
+			x: 330,
+			y: 0
+		};
+		
+		for (i in elements) {
+			
+			createElement(elements[i]);
+			
+		}
+		
 
-					if (response.filename.indexOf('@2x') != -1) {
-						response.data.width = response.data.width / 2;
-						response.data.height = response.data.height / 2;
-					}
-					
-					var element =  board.append('div')
-															.classed('element', true)
-															.style('background-image', 'url(/upload/'+ response.filename +')')
-															.style('width', response.data.width + 'px')
-															.style('height', response.data.height + 'px')
-															
-				  var draggie = new Draggabilly( element[0][0], {
-				    grid: [ 10, 10 ],
-				    containment: '#board'
-				  });
-				  draggies.push( draggie );
-					
-				},
-				complete: function(e) {
-					this.removeFile(e);
+		var draggies = []	
+		Dropzone.autoDiscover = false;
+		var myDropzone = new Dropzone("#drop", { 
+			url: "/profile",
+			success: function(e, response) {
+
+				var re = /@(\d)x/;
+			  var ret = re.exec(response.filename);
+
+				if (ret != null) {
+					response.data.width = response.data.width / ret[1];
+					response.data.height = response.data.height / ret[1];
 				}
-			});
+				
+				var element =  board.append('div')
+														.classed('element', true)
+														.style('background-image', 'url(/upload/'+ response.filename +')')
+														.style('width', response.data.width + 'px')
+														.style('height', response.data.height + 'px')
+				initElement(element[0][0]);
+				
+			},
+			complete: function(e) {
+				this.removeFile(e);
+			}
+		});
 			
-			var draggableElems = document.querySelectorAll('div.element');
-			// init Draggabillies
-			for ( var i=0, len = draggableElems.length; i < len; i++ ) {
-			  var draggableElem = draggableElems[i];
-			  var draggie = new Draggabilly( draggableElem, {
-			    grid: [ 10, 10 ],
-			    containment: '#board'
-			  });
-			  draggies.push( draggie );
-			}			
+		function createElement(data) {
+			
+			var re = /@(\d)x/;
+		  var ret = re.exec(data.filename);
+		  data.retina = ret;
+		  
+			if (ret != null) {
+				data.width = data.width / data.retina[1];
+				data.height = data.height / data.retina[1];
+			}
+			
+			var element =  board.append('div')
+													.classed('element', true)
+													.style('left', data.x + 'px')
+													.style('top', data.y + 'px')
+													.html(template(data));
+			element
+				.select('div.image')
+				.style('width', data.width + 'px')
+				.style('height', data.height + 'px')
+				
+		  var draggie = new Draggabilly( element[0][0], {
+		    containment: '#board'
+		  });
+		  
+		  draggie.on('dragStart', function() {
+			  d3.select(this.element)
+			  		.classed('active', false)
+		  })
+		  
+		  draggie.on('staticClick', function() {
+			  var e = d3.select(this.element)
+			  	e.classed('active', !e.classed('active'))
+		  })
+		  
+		  draggie.on('dragEnd', function() {
+			  var x = Math.round(this.position.x / 10) * 10;
+			  var y = Math.round(this.position.y / 10) * 10;
+			  	
+			  	console.log(this.size);
+			  	
+			  	checkOverlap();
+			  	
+			  d3.select(this.element)
+			  		.classed('active', false)
+					.transition()
+					.duration(100)
+				  		.style('left', x +'px')
+				  		.style('top', y +'px');
+		  })
+							
+		}
+		
+		function checkOverlap(x,y,w,h) {
+			
+			var overlapped = false;
+			
+			console.log(elements);
+			
+/*
+			for (i in elements) {
+								
+			}
+*/
+			
+		}
 			
 		</script>
 
